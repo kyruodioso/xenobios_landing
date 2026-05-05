@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import BenefitCards from "@/components/BenefitCards";
 import ImageCarousel from "@/components/ImageCarousel";
 import LoreSection from "@/components/LoreSection";
+import CoreLoop from "@/components/CoreLoop";
 
 export default function Home() {
   return (
@@ -36,6 +37,9 @@ export default function Home() {
 
       {/* Features Section */}
       <Features />
+
+      {/* Core Loop Section (El Camino del Ánima) */}
+      <CoreLoop />
 
       {/* Lore Section (Ecos de la Estasis) */}
       <LoreSection />
