@@ -3,6 +3,7 @@ import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import BenefitCards from "@/components/BenefitCards";
 import ImageCarousel from "@/components/ImageCarousel";
+import LoreSection from "@/components/LoreSection";
 
 export default function Home() {
   return (
@@ -35,6 +36,9 @@ export default function Home() {
 
       {/* Features Section */}
       <Features />
+
+      {/* Lore Section (Ecos de la Estasis) */}
+      <LoreSection />
 
       <Footer />
     </main>
