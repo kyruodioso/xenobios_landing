@@ -2,13 +2,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-// Inicialización de clientes
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+// La inicialización se hace dentro del POST para evitar errores en el build de Vercel
+// si las variables de entorno no están configuradas todavía.
 
 function generateToken() {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -20,6 +15,18 @@ function generateToken() {
 
 export async function POST(request: Request) {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const resendKey = process.env.RESEND_API_KEY;
+
+    if (!supabaseUrl || !supabaseKey || !resendKey) {
+      console.error('Faltan variables de entorno para Xenobios API');
+      return NextResponse.json({ error: 'Configuración incompleta en el servidor.' }, { status: 500 });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const resend = new Resend(resendKey);
+
     const { email } = await request.json();
 
     if (!email) {
