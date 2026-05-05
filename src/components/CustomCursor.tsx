@@ -42,17 +42,17 @@ export default function CustomCursor() {
   return (
     <>
       <motion.div
-        className="fixed top-0 left-0 w-6 h-6 bg-cyan-400/30 rounded-full pointer-events-none z-[9999] blur-md"
+        className="fixed top-0 left-0 w-8 h-8 bg-cyan-400/40 rounded-full pointer-events-none z-[9999] blur-xl"
         style={{
           x: cursorX,
           y: cursorY,
           translateX: "-50%",
           translateY: "-50%",
-          scale: isHovering ? 2.5 : 1,
+          scale: isHovering ? 2 : 1,
         }}
       />
       <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-cyan-400 rounded-full pointer-events-none z-[9999]"
+        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] shadow-[0_0_15px_#22d3ee,0_0_5px_#fff]"
         style={{
           x: cursorX,
           y: cursorY,

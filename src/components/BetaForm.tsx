@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function BetaForm() {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [capacity, setCapacity] = useState(34);
 
   useEffect(() => {
@@ -15,10 +17,34 @@ export default function BetaForm() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    setSubmitted(true);
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/beta-claim", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Algo salió mal");
+      }
+
+      setSuccessMessage(data.message);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,46 +77,73 @@ export default function BetaForm() {
         </div>
 
         <AnimatePresence mode="wait">
-          {!submitted ? (
-            <motion.form
-              key="form"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-3"
-            >
-              <input
-                type="email"
-                placeholder="tu@alma.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-black/50 border border-gray-800 rounded-md px-4 py-3 text-cyan-100 placeholder-gray-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-300"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-cyan-900/40 hover:bg-cyan-800/60 border border-cyan-700/50 hover:border-cyan-400 text-cyan-100 px-6 py-3 rounded-md font-medium transition-all duration-300 hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]"
+          {!successMessage ? (
+            <motion.div key="form-container">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col sm:flex-row gap-3"
               >
-                Solicitar Suscripción
-              </button>
-            </motion.form>
+                <input
+                  type="email"
+                  placeholder="tu@alma.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  className="flex-1 bg-black/50 border border-gray-800 rounded-md px-4 py-3 text-cyan-100 placeholder-gray-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-300 disabled:opacity-50"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-cyan-900/40 hover:bg-cyan-800/60 border border-cyan-700/50 hover:border-cyan-400 text-cyan-100 px-6 py-3 rounded-md font-medium transition-all duration-300 hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? "Reclamando..." : "Solicitar Suscripción"}
+                </button>
+              </form>
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-red-400 text-xs mt-3 text-center font-medium"
+                >
+                  {error}
+                </motion.p>
+              )}
+            </motion.div>
           ) : (
             <motion.div
               key="success"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-center py-3"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, type: "spring" }}
+              className="text-center py-6"
             >
-              <p className="text-cyan-300 font-medium">
-                Conectando con la Crisálida Rúnica... Revisa tu correo.
+              <div className="mb-4 inline-block p-3 rounded-full bg-cyan-500/10 border border-cyan-500/30">
+                <svg
+                  className="w-8 h-8 text-cyan-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <p className="text-cyan-300 font-bold text-lg mb-1">
+                ¡Fragmento Reclamado!
+              </p>
+              <p className="text-gray-400 text-sm">
+                {successMessage}. Revisa la Crisálida (tu correo).
               </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
     </div>
+
   );
 }
