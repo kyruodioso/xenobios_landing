@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Upload, Plus, Loader2, Info } from 'lucide-react'
@@ -18,6 +20,10 @@ export default function UpdatesAdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!supabase) {
+      setError('Error de configuración: Faltan las claves de Supabase.')
+      return
+    }
     setIsLoading(true)
     setError(null)
     setSuccess(false)
