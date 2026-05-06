@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
 // La inicialización se hace dentro del POST para evitar errores en el build de Vercel
 // si las variables de entorno no están configuradas todavía.
@@ -46,15 +46,23 @@ export async function POST(request: Request) {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    const resendKey = process.env.RESEND_API_KEY;
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailPass = process.env.GMAIL_APP_PASSWORD;
 
-    if (!supabaseUrl || !supabaseKey || !resendKey) {
-      console.error('Faltan variables de entorno para Xenobios API');
+    if (!supabaseUrl || !supabaseKey || !gmailUser || !gmailPass) {
+      console.error('Faltan variables de entorno para Xenobios API (Supabase o Gmail)');
       return NextResponse.json({ error: 'Configuración incompleta en el servidor.' }, { status: 500 });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
-    const resend = new Resend(resendKey);
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: gmailUser,
+        pass: gmailPass,
+      },
+    });
 
     const { email } = await request.json();
 
@@ -93,12 +101,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Error al reclamar el Fragmento. Reintenta.' }, { status: 500 });
     }
 
-    // 4. Enviar correo vía Resend
+    // 4. Enviar correo vía Nodemailer
     try {
-      await resend.emails.send({
-        from: 'Xenobios <noreply@resend.dev>', // Usar dominio verificado en producción
+      await transporter.sendMail({
+        from: `"Xenobios Beta" <${gmailUser}>`,
         to: email,
-        subject: 'Tu Fragmento Rúnico ha sido forjado - Beta de Xenobios',
+        subject: 'Tu Fragmento Rúnico te espera - Xenobios',
         html: `
 <div style="background-color: #050505; color: #e5e7eb; font-family: 'Inter', Helvetica, Arial, sans-serif; padding: 50px 20px; text-align: center; border: 1px solid #1f2937; max-width: 600px; margin: 0 auto;">
   
@@ -109,7 +117,7 @@ export async function POST(request: Request) {
   <p style="font-size: 16px; line-height: 1.6; color: #9ca3af; margin: 0 auto 35px; max-width: 480px;">
     Siento una presencia... Estás ahí? Has sido elegido entre 50 pioneros para reclamar la Autoridad en este nuevo mundo.
   </p>
-
+  
   <div style="background-color: rgba(255, 255, 255, 0.03); border: 1px dashed #DEFF9A; padding: 30px; margin: 0 auto 40px; max-width: 350px; border-radius: 8px;">
     <p style="font-size: 12px; color: #DEFF9A; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px; font-weight: bold;">Tu Fragmento Rúnico</p>
     <h2 style="color: #ffffff; font-family: monospace; font-size: 36px; letter-spacing: 5px; margin: 0; text-shadow: 0 0 15px rgba(222, 255, 154, 0.4);">
@@ -128,12 +136,12 @@ export async function POST(request: Request) {
   </p>
 
 </div>
-`
+`,
       });
     } catch (emailError) {
       console.error('Error al enviar email:', emailError);
-      // Opcional: Podrías retornar éxito igual porque ya se guardó en DB, 
-      // pero el usuario pidió enviarlo. Aquí lo dejamos pasar o informamos.
+      // Informamos que el fragmento se generó pero hubo un error en el envío.
+      // Opcional: Podríamos retornar éxito igual porque ya se guardó en DB.
     }
 
     return NextResponse.json({ message: 'Fragmento enviado exitosamente' }, { status: 200 });
