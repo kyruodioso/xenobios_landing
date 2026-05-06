@@ -33,6 +33,13 @@ export default function UpdateFeed() {
       const to = from + POSTS_PER_PAGE - 1
 
       const supabase = createClient()
+      
+      if (!supabase) {
+        setError('Error de conexión: Faltan las llaves del Génesis (Environment Variables).')
+        setIsLoading(false)
+        return
+      }
+
       const { data, error: fetchError } = await supabase
         .from('updates')
         .select('*')
