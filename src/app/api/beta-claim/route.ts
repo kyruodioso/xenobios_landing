@@ -71,23 +71,35 @@ export async function POST(request: Request) {
         to: email,
         subject: 'Tu Fragmento Rúnico ha sido forjado - Beta de Xenobios',
         html: `
-          <div style="background-color: #050505; color: #f0f0f0; padding: 40px; font-family: 'Cinzel', serif; border: 1px solid #1a1a1a; max-width: 600px; margin: 0 auto; border-radius: 8px;">
-            <h1 style="color: #00e5ff; text-align: center; font-size: 24px; text-transform: uppercase; letter-spacing: 2px;">Xenobios</h1>
-            <div style="margin-top: 30px; text-align: center;">
-              <p style="font-size: 16px; line-height: 1.6;">Has sido elegido por los Jardines del Génesis.</p>
-              <p style="font-size: 16px; line-height: 1.6;">Tu Fragmento Rúnico está listo para ser reclamado:</p>
-              
-              <div style="background-color: #0a0a0a; border: 2px dashed #00e5ff; padding: 20px; margin: 30px 0; border-radius: 4px;">
-                <span style="font-size: 32px; font-weight: bold; color: #DEFF9A; letter-spacing: 5px; font-family: monospace;">${token}</span>
-              </div>
-              
-              <p style="color: #888; font-size: 14px; margin-top: 40px;">No compartas este código con otras ánimas. La corrupción acecha.</p>
-            </div>
-            <div style="margin-top: 40px; border-top: 1px solid #1a1a1a; padding-top: 20px; text-align: center; color: #444; font-size: 12px;">
-              © 2026 Xenobios - El Renacer de las Ánimas
-            </div>
-          </div>
-        `
+<div style="background-color: #050505; color: #e5e7eb; font-family: 'Inter', Helvetica, Arial, sans-serif; padding: 50px 20px; text-align: center; border: 1px solid #1f2937; max-width: 600px; margin: 0 auto;">
+  
+  <h1 style="color: #00FFFF; font-family: 'Cinzel', serif; font-size: 28px; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);">
+    El Despertar de las Ánimas
+  </h1>
+  
+  <p style="font-size: 16px; line-height: 1.6; color: #9ca3af; margin: 0 auto 35px; max-width: 480px;">
+    Siento una presencia... Estás ahí? Has sido elegido entre 50 pioneros para reclamar la Autoridad en este nuevo mundo.
+  </p>
+
+  <div style="background-color: rgba(255, 255, 255, 0.03); border: 1px dashed #DEFF9A; padding: 30px; margin: 0 auto 40px; max-width: 350px; border-radius: 8px;">
+    <p style="font-size: 12px; color: #DEFF9A; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px; font-weight: bold;">Tu Fragmento Rúnico</p>
+    <h2 style="color: #ffffff; font-family: monospace; font-size: 36px; letter-spacing: 5px; margin: 0; text-shadow: 0 0 15px rgba(222, 255, 154, 0.4);">
+      ${token}
+    </h2>
+  </div>
+
+  <a href="https://xenobios-game.vercel.app/" style="display: inline-block; background-color: transparent; color: #00FFFF; text-decoration: none; padding: 16px 32px; border: 1px solid #00FFFF; border-radius: 4px; font-size: 14px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);">
+    Entrar a Xenobios
+  </a>
+
+  <hr style="border: 0; border-top: 1px solid #1f2937; margin: 50px auto 30px; max-width: 200px;" />
+
+  <p style="font-size: 13px; color: #4b5563; font-style: italic; max-width: 400px; margin: 0 auto;">
+    "No pierdas este fragmento. Son entradas limitadas(?)." <br/> — Xora
+  </p>
+
+</div>
+`
       });
     } catch (emailError) {
       console.error('Error al enviar email:', emailError);
