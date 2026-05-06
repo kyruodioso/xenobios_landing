@@ -8,13 +8,25 @@ export default function BetaForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const [capacity, setCapacity] = useState(34);
+  const [capacity, setCapacity] = useState<number | null>(null);
+  const [capacityLoading, setCapacityLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCapacity(33);
-    }, 5000);
-    return () => clearTimeout(timer);
+    const fetchCapacity = async () => {
+      try {
+        const response = await fetch("/api/beta-claim");
+        const data = await response.json();
+        if (data.remaining !== undefined) {
+          setCapacity(data.remaining);
+        }
+      } catch (err) {
+        console.error("Error fetching capacity:", err);
+      } finally {
+        setCapacityLoading(false);
+      }
+    };
+
+    fetchCapacity();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,7 +75,9 @@ export default function BetaForm() {
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_10px_rgba(0,255,255,0.8)]" />
             <p className="text-cyan-400 text-[10px] uppercase tracking-[0.3em] font-bold">
               Capacidad del Nexo:{" "}
-              <span className="inline-block min-w-[2ch]">{capacity}</span>/50
+              <span className="inline-block min-w-[2ch]">
+                {capacityLoading ? "..." : capacity ?? "??"}
+              </span>/50
               Ánimas restantes
             </p>
           </motion.div>
