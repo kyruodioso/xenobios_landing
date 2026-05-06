@@ -6,57 +6,66 @@ export async function middleware(request: NextRequest) {
     request,
   })
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // Proteger las rutas /admin (excepto /admin/login)
-  if (
-    request.nextUrl.pathname.startsWith('/admin') &&
-    !request.nextUrl.pathname.startsWith('/admin/login')
-  ) {
-    if (!user) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin/login'
-      return NextResponse.redirect(url)
-    }
-
-    // Verificar si el email coincide con el ADMIN_EMAIL configurado
-    if (user.email !== process.env.ADMIN_EMAIL) {
-      // Si está logueado pero no es administrador, podríamos desloguearlo o redirigir a un 403
-      // En este caso lo mandamos al index.
-      const url = request.nextUrl.clone()
-      url.pathname = '/'
-      return NextResponse.redirect(url)
-    }
+  if (!supabaseUrl || !supabaseKey) {
+    return supabaseResponse
   }
 
-  // Si estamos en /admin/login y YA hay sesión con ADMIN_EMAIL, mandarlo directo al panel
-  if (request.nextUrl.pathname.startsWith('/admin/login') && user && user.email === process.env.ADMIN_EMAIL) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/updates'
-    return NextResponse.redirect(url)
+  try {
+    const supabase = createServerClient(
+      supabaseUrl,
+      supabaseKey,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+            supabaseResponse = NextResponse.next({
+              request,
+            })
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            )
+          },
+        },
+      }
+    )
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    // Proteger las rutas /admin (excepto /admin/login)
+    if (
+      request.nextUrl.pathname.startsWith('/admin') &&
+      !request.nextUrl.pathname.startsWith('/admin/login')
+    ) {
+      if (!user) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/login'
+        return NextResponse.redirect(url)
+      }
+
+      // Verificar si el email coincide con el ADMIN_EMAIL configurado
+      if (user.email !== process.env.ADMIN_EMAIL) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.redirect(url)
+      }
+    }
+
+    // Si estamos en /admin/login y YA hay sesión con ADMIN_EMAIL, mandarlo directo al panel
+    if (request.nextUrl.pathname.startsWith('/admin/login') && user && user.email === process.env.ADMIN_EMAIL) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin/updates'
+      return NextResponse.redirect(url)
+    }
+  } catch (e) {
+    console.error('Middleware Error:', e)
   }
 
   return supabaseResponse
