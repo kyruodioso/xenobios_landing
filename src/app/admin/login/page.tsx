@@ -1,6 +1,7 @@
 "use client"
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -14,7 +15,9 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
+  
+  // Lazy initialization
+  const supabase = typeof window !== 'undefined' ? createClient() : null
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -1,6 +1,7 @@
 "use client"
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
@@ -16,7 +17,8 @@ export default function UpdatesAdminPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const supabase = createClient()
+  // Lazy initialization of supabase client
+  const supabase = typeof window !== 'undefined' ? createClient() : null
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
