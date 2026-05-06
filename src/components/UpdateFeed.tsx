@@ -1,84 +1,93 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { motion } from 'framer-motion'
-import { Calendar, Tag, Loader2, Sparkles } from 'lucide-react'
+import { useState, useEffect, useCallback } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { motion } from "framer-motion";
+import { Calendar, Tag, Loader2, Sparkles } from "lucide-react";
 
 // Definimos la interfaz localmente para los updates
 interface UpdateRecord {
-  id: string
-  title: string
-  content: string
-  image_url: string | null
-  version: string
-  created_at: string
+  id: string;
+  title: string;
+  content: string;
+  image_url: string | null;
+  version: string;
+  created_at: string;
 }
 
-const POSTS_PER_PAGE = 3
+const POSTS_PER_PAGE = 3;
 
 export default function UpdateFeed() {
-  const [posts, setPosts] = useState<UpdateRecord[]>([])
-  const [page, setPage] = useState(0)
-  const [isLoading, setIsLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [posts, setPosts] = useState<UpdateRecord[]>([]);
+  const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchUpdates = useCallback(async (pageNum: number) => {
-    setIsLoading(true)
-    setError(null)
-    
+    setIsLoading(true);
+    setError(null);
     try {
-      const from = pageNum * POSTS_PER_PAGE
-      const to = from + POSTS_PER_PAGE - 1
+      const from = pageNum * POSTS_PER_PAGE;
+      const to = from + POSTS_PER_PAGE - 1;
 
       const supabase = createClient()
       
       if (!supabase) {
-        setError('Error de conexión: Faltan las llaves del Génesis (Environment Variables).')
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        let missing = []
+        if (!url) missing.push('URL')
+        if (!key) missing.push('ANON_KEY')
+        
+        setError(`Error de configuración: Faltan las llaves del Génesis (${missing.join(' y ')}).`)
         setIsLoading(false)
         return
       }
 
       const { data, error: fetchError } = await supabase
-        .from('updates')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(from, to)
+        .from("updates")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .range(from, to);
 
-      if (fetchError) throw fetchError
-      
-      const newPosts = data || []
-      
+      if (fetchError) throw fetchError;
+
+      const newPosts = data || [];
+
       if (pageNum === 0) {
-        setPosts(newPosts)
+        setPosts(newPosts);
       } else {
-        setPosts(prev => [...prev, ...newPosts])
+        setPosts((prev) => [...prev, ...newPosts]);
       }
 
       if (newPosts.length < POSTS_PER_PAGE) {
-        setHasMore(false)
+        setHasMore(false);
       }
     } catch (err: any) {
-      console.error('Error fetching updates:', err)
-      setError('Los archivos se han corrompido temporalmente. Intenta más tarde.')
+      console.error("Error fetching updates:", err);
+      setError(
+        "Los archivos se han corrompido temporalmente. Intenta más tarde.",
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [])
+
+  }, []);
+
 
   // Carga inicial
   useEffect(() => {
     if (page === 0) {
-      fetchUpdates(0)
+      fetchUpdates(0);
     }
-  }, [page, fetchUpdates])
+  }, [page, fetchUpdates]);
 
   const handleLoadMore = () => {
-    const nextPage = page + 1
-    setPage(nextPage)
-    fetchUpdates(nextPage)
-  }
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchUpdates(nextPage);
+  };
 
   return (
     <section className="py-24 px-4 max-w-5xl mx-auto relative z-10">
@@ -88,7 +97,8 @@ export default function UpdateFeed() {
           Ecos del Desarrollo
         </h2>
         <p className="text-gray-400 max-w-2xl mx-auto font-sans">
-          El Valle del Despertar muta constantemente. Conoce los últimos avances técnicos y visuales de la Estasis.
+          El Valle del Despertar muta constantemente. Conoce los últimos avances
+          técnicos y visuales.
         </p>
       </div>
 
@@ -96,7 +106,9 @@ export default function UpdateFeed() {
       {isLoading && posts.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 opacity-50">
           <Loader2 className="w-8 h-8 text-cyan-500 animate-spin mb-4" />
-          <p className="text-cyan-400/80 font-cinzel tracking-widest text-sm uppercase">Sincronizando Crónicas...</p>
+          <p className="text-cyan-400/80 font-cinzel tracking-widest text-sm uppercase">
+            Sincronizando Crónicas...
+          </p>
         </div>
       )}
 
@@ -109,7 +121,8 @@ export default function UpdateFeed() {
       {!isLoading && !error && posts.length === 0 && (
         <div className="text-center py-16">
           <p className="text-gray-500 font-cinzel italic tracking-wider">
-            &quot;Los registros de la Crisálida están en silencio por ahora.&quot;
+            &quot;Los registros de la Crisálida están en silencio por
+            ahora.&quot;
           </p>
         </div>
       )}
@@ -123,7 +136,11 @@ export default function UpdateFeed() {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: (index % POSTS_PER_PAGE) * 0.1, ease: "easeOut" }}
+              transition={{
+                duration: 0.6,
+                delay: (index % POSTS_PER_PAGE) * 0.1,
+                ease: "easeOut",
+              }}
               className="group relative bg-white/5 backdrop-blur-md border border-[#333] rounded-2xl overflow-hidden transition-all duration-500 hover:border-cyan-500/40 hover:shadow-[0_0_30px_-10px_rgba(0,255,255,0.15)] flex flex-col md:flex-row"
             >
               {/* Imagen Superior / Lateral */}
@@ -147,14 +164,14 @@ export default function UpdateFeed() {
                     <Tag className="w-3.5 h-3.5" />
                     {update.version}
                   </span>
-                  
+
                   {/* Fecha de Creación */}
                   <span className="flex items-center gap-1.5 text-sm text-gray-500 font-medium">
                     <Calendar className="w-4 h-4" />
-                    {new Date(update.created_at).toLocaleDateString('es-ES', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
+                    {new Date(update.created_at).toLocaleDateString("es-ES", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
                     })}
                   </span>
                 </div>
@@ -162,7 +179,7 @@ export default function UpdateFeed() {
                 <h3 className="font-cinzel text-3xl font-bold text-gray-100 mb-4 group-hover:text-white transition-colors">
                   {update.title}
                 </h3>
-                
+
                 <p className="text-gray-400 text-base leading-relaxed font-sans whitespace-pre-wrap">
                   {update.content}
                 </p>
@@ -182,7 +199,7 @@ export default function UpdateFeed() {
           >
             {/* Hover Background Glow */}
             <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+
             <span className="relative flex items-center gap-3">
               {isLoading ? (
                 <>
@@ -200,5 +217,5 @@ export default function UpdateFeed() {
         </div>
       )}
     </section>
-  )
+  );
 }
