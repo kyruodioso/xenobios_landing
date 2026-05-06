@@ -34,19 +34,9 @@ export default function UpdateFeed() {
       const supabase = createClient()
       
       if (!supabase) {
-        const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-        let errors = []
-        
-        if (!url) errors.push('Falta URL')
-        else if (!url.startsWith('http')) errors.push('URL no empieza con https://')
-        
-        if (!key) errors.push('Falta ANON_KEY')
-        else if (key.length < 20) errors.push('ANON_KEY parece demasiado corta')
-        
-        setError(`Error de configuración: ${errors.join(' | ')}`)
-        setIsLoading(false)
-        return
+        setError("Los archivos se han corrompido temporalmente. Intenta más tarde.");
+        setIsLoading(false);
+        return;
       }
 
       const { data, error: fetchError } = await supabase
