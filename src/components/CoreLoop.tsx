@@ -8,13 +8,15 @@ const StepCard = ({
   title, 
   content, 
   index,
-  iconColor = "text-cyan-400"
+  iconColor = "text-cyan-400",
+  isMonarch = false
 }: { 
   icon: any, 
   title: string, 
   content: string, 
   index: number,
-  iconColor?: string
+  iconColor?: string,
+  isMonarch?: boolean
 }) => {
   const isEven = index % 2 === 0;
 
@@ -24,13 +26,13 @@ const StepCard = ({
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8, delay: index * 0.2 }}
-      className={`flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-24 last:mb-0 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+      className={`flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-24 last:mb-0 transition-all duration-700 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} ${isMonarch ? 'grayscale saturate-50' : 'saturate-150'}`}
     >
       {/* Icon Section */}
       <div className="relative flex-shrink-0">
-        <div className="absolute inset-0 bg-cyan-500/20 blur-2xl rounded-full scale-150 animate-pulse" />
-        <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors">
-          <Icon className={`w-10 h-10 md:w-14 md:h-14 ${iconColor} drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]`} />
+        <div className={`absolute inset-0 ${isMonarch ? 'bg-gray-500/20' : 'bg-cyan-500/20'} blur-2xl rounded-full scale-150 animate-pulse`} />
+        <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-white/5 backdrop-blur-xl border ${isMonarch ? 'border-gray-500/30' : 'border-white/10'} flex items-center justify-center group-hover:border-cyan-400/50 transition-colors`}>
+          <Icon className={`w-10 h-10 md:w-14 md:h-14 ${isMonarch ? 'text-gray-400' : iconColor} ${!isMonarch && 'drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]'}`} />
         </div>
       </div>
 
@@ -45,7 +47,7 @@ const StepCard = ({
         </p>
         
         {/* Decorative Line (Mobile) */}
-        <div className="w-12 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent mx-auto mt-8 md:hidden" />
+        <div className={`w-12 h-px ${isMonarch ? 'bg-gray-500/30' : 'bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent'} mx-auto mt-8 md:hidden`} />
       </div>
     </motion.div>
   );
@@ -66,6 +68,20 @@ export default function CoreLoop() {
         >
           Tu Propósito en la Estasis
         </motion.h2>
+        
+        {/* Archivo Nexo-01 Block */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="mb-8 p-4 bg-zinc-900/30 border-l-2 border-cyan-500 max-w-3xl mx-auto text-left"
+        >
+          <p className="font-mono text-sm text-cyan-400/80 leading-relaxed uppercase tracking-tighter">
+            <span className="text-cyan-400 font-bold">ARCHIVO NEXO-01 // LA ESTASIS:</span> La Estasis no es paz; es una necrosis del tiempo. Es la parálisis artificial del ciclo vital impuesta por los Monarcas al secuestrar el Lúmen. Un mundo en Estasis es un organismo que ha dejado de respirar para no tener que morir. Es el estado de coma que precede a la desaparición absoluta bajo el Vacío.
+          </p>
+        </motion.div>
+
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -84,6 +100,7 @@ export default function CoreLoop() {
         <StepCard
           index={0}
           icon={Compass}
+          isMonarch={true}
           title="Explorar la Necrosis"
           content="Adéntrate en los Jardines del Génesis. Recorrerás biomas petrificados, ruinas bioluminiscentes y Templos corruptos donde los Monarcas custodian el Lúmen. Cada paso fuera de la Crisálida Rúnica es un riesgo."
         />

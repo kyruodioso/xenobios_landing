@@ -2,18 +2,18 @@
 
 import { motion } from "framer-motion";
 
-const LoreCard = ({ title, subtitle, content, className = "" }: { title: string, subtitle?: string, content: string, className?: string }) => {
+const LoreCard = ({ title, subtitle, content, className = "", isMonarch = false }: { title: string, subtitle?: string, content: string, className?: string, isMonarch?: boolean }) => {
   return (
     <motion.div
       initial={false}
       whileHover="hover"
-      className={`relative p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden group transition-all duration-500 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(0,255,255,0.05)] ${className}`}
+      className={`relative p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden group transition-all duration-700 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(0,255,255,0.05)] ${className} ${isMonarch ? 'grayscale saturate-50 hover:grayscale-0 hover:saturate-100' : 'saturate-100 hover:saturate-200'}`}
     >
       {/* Brillo de fondo sutil en hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+      <div className={`absolute inset-0 bg-gradient-to-br ${isMonarch ? 'from-gray-500/5' : 'from-cyan-500/5'} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
       
       <div className="relative z-10 h-full flex flex-col">
-        <h3 className="font-cinzel text-cyan-400 text-xs tracking-[0.3em] uppercase mb-2 font-bold">
+        <h3 className={`font-cinzel ${isMonarch ? 'text-gray-400' : 'text-cyan-400'} text-xs tracking-[0.3em] uppercase mb-2 font-bold transition-colors duration-700`}>
           {title}
         </h3>
         {subtitle && (
@@ -51,7 +51,7 @@ export default function LoreSection() {
         <LoreCard
           title="El Árbol del Aliento"
           subtitle="El Último Reflejo"
-          content="Xenobios no es una roca inerte, sino un organismo en coma inducido. El Árbol del Aliento es su último órgano funcional. Mediante La Gran Exhalación, lanza al mundo nuevas oleadas de conciencia para fracturar la parálisis de la Estasis."
+          content="Xenobios no es una roca inerte, sino un organismo en coma inducido. Ese coma es lo que los Monarcas llaman Orden, y lo que nosotros conocemos como Estasis. El Árbol del Aliento es su último órgano funcional, el único acto de rebelión biológica que mantiene al mundo lejos del olvido."
           className="md:col-span-2 md:row-span-2"
         />
 
@@ -65,6 +65,7 @@ export default function LoreSection() {
 
         {/* Tarjeta 3: Los Arquitectos de la Inmovilidad */}
         <LoreCard
+          isMonarch={true}
           title="Arquitectos de la Inmovilidad"
           subtitle="Los Monarcas"
           content="Antiguos guías corrompidos por el terror a desaparecer. Han secuestrado el Lúmen construyendo Templos sobre los nodos vitales para alimentar su propia inmortalidad, condenando al mundo a una paz artificial."
