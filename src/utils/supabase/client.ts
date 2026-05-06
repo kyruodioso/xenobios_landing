@@ -4,9 +4,15 @@ export function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // Durante el build de Next.js (prerendering), las variables de entorno pueden no estar disponibles.
-  // @supabase/ssr lanza un error si se intenta crear el cliente sin ellas.
-  // Devolvemos null para evitar que el build falle; en el navegador las variables estarán presentes.
+  // Debug log para Vercel
+  if (typeof window !== 'undefined') {
+    console.log('Supabase Config Check:', { 
+      hasUrl: !!url, 
+      hasKey: !!key,
+      urlPrefix: url ? url.substring(0, 10) + '...' : 'none'
+    })
+  }
+
   if (!url || !key) {
     return null as any
   }
