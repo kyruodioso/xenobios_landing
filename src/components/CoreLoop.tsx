@@ -74,21 +74,21 @@ export default function CoreLoop() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="text-gray-400 font-sans text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-10"
+          className="text-gray-400 font-sans text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-12"
         >
           El vacío devora el mundo. Como Ánima recién despertada, tu misión es táctica y brutal.
         </motion.p>
 
-        {/* Archivo Nexo-01 Block */}
+        {/* Bloque Narrativo de la Estasis */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="mb-16 p-6 bg-zinc-900/30 border-l-2 border-[#00FFFF] max-w-4xl mx-auto text-left backdrop-blur-sm"
+          className="max-w-4xl mx-auto text-center"
         >
-          <p className="font-mono text-sm text-[#00FFFF]/70 leading-relaxed uppercase tracking-tight">
-            <span className="text-[#00FFFF] font-bold">ARCHIVO NEXO-01 // LA ESTASIS:</span> La Estasis no es paz; es una necrosis del tiempo. Es la parálisis artificial del ciclo vital impuesta por los Monarcas al secuestrar el Lúmen. Un mundo en Estasis es un organismo que ha dejado de respirar para no tener que morir. Es el estado de coma que precede a la desaparición absoluta bajo el Vacío.
+          <p className="font-sans text-lg text-gray-400 leading-relaxed italic">
+            La Estasis no es paz; es una necrosis del tiempo. Es la parálisis artificial del ciclo vital impuesta por los Monarcas al secuestrar el Lúmen. Un mundo en Estasis es un organismo que ha dejado de respirar para no tener que morir. Es el estado de coma que precede a la desaparición absoluta bajo el Vacío.
           </p>
         </motion.div>
       </div>
