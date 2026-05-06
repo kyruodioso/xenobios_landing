@@ -69,33 +69,33 @@ export default function CoreLoop() {
           Tu Propósito en la Estasis
         </motion.h2>
         
-        {/* Archivo Nexo-01 Block */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="mb-8 p-4 bg-zinc-900/30 border-l-2 border-cyan-500 max-w-3xl mx-auto text-left"
-        >
-          <p className="font-mono text-sm text-cyan-400/80 leading-relaxed uppercase tracking-tighter">
-            <span className="text-cyan-400 font-bold">ARCHIVO NEXO-01 // LA ESTASIS:</span> La Estasis no es paz; es una necrosis del tiempo. Es la parálisis artificial del ciclo vital impuesta por los Monarcas al secuestrar el Lúmen. Un mundo en Estasis es un organismo que ha dejado de respirar para no tener que morir. Es el estado de coma que precede a la desaparición absoluta bajo el Vacío.
-          </p>
-        </motion.div>
-
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="text-gray-400 font-sans text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"
+          className="text-gray-400 font-sans text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-10"
         >
           El vacío devora el mundo. Como Ánima recién despertada, tu misión es táctica y brutal.
         </motion.p>
+
+        {/* Archivo Nexo-01 Block */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="mb-16 p-6 bg-zinc-900/30 border-l-2 border-[#00FFFF] max-w-4xl mx-auto text-left backdrop-blur-sm"
+        >
+          <p className="font-mono text-sm text-[#00FFFF]/70 leading-relaxed uppercase tracking-tight">
+            <span className="text-[#00FFFF] font-bold">ARCHIVO NEXO-01 // LA ESTASIS:</span> La Estasis no es paz; es una necrosis del tiempo. Es la parálisis artificial del ciclo vital impuesta por los Monarcas al secuestrar el Lúmen. Un mundo en Estasis es un organismo que ha dejado de respirar para no tener que morir. Es el estado de coma que precede a la desaparición absoluta bajo el Vacío.
+          </p>
+        </motion.div>
       </div>
 
       <div className="relative">
         {/* Connecting Line (Desktop) */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-cyan-500/20 to-transparent hidden md:block" />
+        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#00FFFF]/20 to-transparent hidden md:block" />
 
         <StepCard
           index={0}
@@ -108,7 +108,7 @@ export default function CoreLoop() {
         <StepCard
           index={1}
           icon={Swords}
-          iconColor="text-lime-400"
+          iconColor="text-[#DEFF9A]"
           title="La Simbiosis Táctica"
           content="No puedes pelear solo. Captura, cría y vincúlate con los Mofis salvajes. Forma un equipo estratégico combinando elementos (Fuego, Planta, Cristal) para sobrevivir a los combates dinámicos contra la fauna corrompida y otros jugadores."
         />
@@ -116,7 +116,7 @@ export default function CoreLoop() {
         <StepCard
           index={2}
           icon={Flame}
-          iconColor="text-cyan-300"
+          iconColor="text-[#00FFFF]"
           title="Recuperar la Autoridad"
           content="Reclama el Lúmen robado. Enfréntate a las fuerzas de los Monarcas o únete al Nexo Rebelde en eventos multijugador masivos. Tu objetivo final es acumular suficiente poder para forzar la Gran Exhalación y reiniciar el mundo."
         />

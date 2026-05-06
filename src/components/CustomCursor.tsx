@@ -41,18 +41,31 @@ export default function CustomCursor() {
 
   return (
     <>
+      {/* Outer Glow (Infection of Life) */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 bg-cyan-400/40 rounded-full pointer-events-none z-[9999] blur-xl"
+        className="fixed top-0 left-0 w-12 h-12 bg-[#00FFFF]/20 rounded-full pointer-events-none z-[9999] blur-2xl"
         style={{
           x: cursorX,
           y: cursorY,
           translateX: "-50%",
           translateY: "-50%",
-          scale: isHovering ? 2 : 1,
+          scale: isHovering ? 2.5 : 1.5,
         }}
       />
+      {/* Middle Glow */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] shadow-[0_0_15px_#22d3ee,0_0_5px_#fff]"
+        className="fixed top-0 left-0 w-6 h-6 bg-[#00FFFF]/40 rounded-full pointer-events-none z-[9999] blur-lg"
+        style={{
+          x: cursorX,
+          y: cursorY,
+          translateX: "-50%",
+          translateY: "-50%",
+          scale: isHovering ? 1.8 : 1,
+        }}
+      />
+      {/* Inner Core */}
+      <motion.div
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999] shadow-[0_0_20px_#00FFFF,0_0_10px_#00FFFF,0_0_5px_#fff]"
         style={{
           x: cursorX,
           y: cursorY,
